@@ -1,0 +1,6 @@
+- id: balderdash
+  name: Balderdash
+  description: This hook checks for profanity in your codebase.
+  entry: ./balderdash.sh
+  language: script
+  args: ["check", "-s"]
