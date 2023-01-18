@@ -34,7 +34,7 @@ function PARSE_CONFIG() {
 
   [ -z $WORDS_FILE ] && WORDS_FILE=$DEFAULT_WORDS_FILE
   if [[ ! -f $WORDS_FILE ]]; then
-    echo "No words file found.";
+    echo "Words file not valid.";
     exit 1;
   fi
   
@@ -48,20 +48,20 @@ function PARSE_CONFIG() {
     echo "No file found.";
     exit 1;
   fi
+
+  CUSTOM_WHITELIST=${DEFAULT_WHITELIST[@]}
+  CUSTOM_BLACKLIST=${DEFAULT_BLACKLIST[@]}
 }
 
 function DOWNLOAD_FILE() {
   local var WORDS_URL="https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/parsed/"
   local var BDSH_DIR=/tmp/bladerdash-words
   [ -d $BDSH_DIR ] || mkdir $BDSH_DIR
-
   [ -z $1 ] && echo No file specified && exit 1;
-  [ -z $2 ] && echo No languages specified && expt 1;
   local var FILE=$1
-  local var LANGS=$2
 
-  for lang in $LANGS; do
-    curl -sL $WORDS_URL/$lang > "$BDSH_DIR/$lang"
+  for lang in ${LANGUAGES[@]}; do
+    curl -sfL $WORDS_URL/$lang > "$BDSH_DIR/$lang"
     echo "Downloaded words list for $lang"
   done
 
@@ -69,18 +69,27 @@ function DOWNLOAD_FILE() {
   rm -f $FILE
   
   # Merging the words files into one
-  for lang in $LANGS; do
+  for lang in ${LANGUAGES[@]}; do
     echo "Parsing $lang"
     cat $BDSH_DIR/$lang >> $FILE
   done
 
-  # TODO: Custom user words
-  # Adding user's custom words to the list
-  # []
-  # [ -f $3 ] && echo "Adding custom words to the list" && cat $3 >> $FILE;
+  # Add custom blacklisted words
+  for word in ${CUSTOM_BLACKLIST[@]}; do
+    echo $word
+    echo $word >> $FILE
+  done
+  echo Added custom blacklisted words to $FILE
 
-  sed -i ':a;N;$!ba;s/\n/|/g' $1
-  echo "Merged all the files into $1"
+  # Remove custom whitelisted words
+  for word in ${CUSTOM_WHITELIST[@]}; do
+    echo $word
+    sed -i "/$word/d" $FILE
+  done
+  echo Removed custom whitelisted words from $FILE
+
+  sed -i ':a;N;$!ba;s/\n/|/g' $FILE
+  echo "Merged all the files into $FILE"
 }
 
 # Actual CLI
@@ -98,15 +107,19 @@ case $1 in
     echo "DEFAULT_DIR=./" >> $FILE
     echo "DEFAULT_WORDS_FILE=$DIR/words.txt" >> $FILE
     echo "LANGUAGES=(en)" >> $FILE
+    echo "DEFAULT_WHITELIST=()" >> $FILE
+    echo "DEFAULT_BLACKLIST=()" >> $FILE
 
-    DEFAULT_LANGS=(en)
-    DOWNLOAD_FILE $DIR/words.txt $DEFAULT_LANGS
+    LANGUAGES=(en)
+    CUSTOM_WHITELIST=()
+    CUSTOM_BLACKLIST=()
+    DOWNLOAD_FILE $DIR/words.txt
     ;;
 
   download|dw)
+    PARSE_OPTS $2 $3 $4 $5 $6 $7 $8 $9
     PARSE_CONFIG
-    source $CONFIG_FILE
-    DOWNLOAD_FILE $WORDS_FILE $LANGUAGES
+    DOWNLOAD_FILE $WORDS_FILE
     ;;
 
   check|c)
@@ -119,11 +132,15 @@ case $1 in
     # For single file
     if [[ ! -z $FILE ]] && [[ -f $FILE ]]; then
       ag -fw "($PROFS)" $FILE
+      if $STRICT; then exit 1; else exit 0; fi
     fi
 
     # For a dir
     ag -fw "($PROFS)" $DIR
     echo "Check Completed."
+
+    # Strict mode check
+    if $STRICT; then exit 1; else exit 0; fi
     ;;
 
   *|help|h)
