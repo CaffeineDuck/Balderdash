@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function PARSE_OPTS() {
-  while getopts "f::w::d::c::" opt; do
+  while getopts "f::w::d::c::s" opt; do
     case $opt in
       f)
         FILE=$OPTARG
@@ -14,6 +14,9 @@ function PARSE_OPTS() {
       ;;
       d)
         DIR=$OPTARG
+        ;;
+      s)
+        STRICT=true
         ;;
       \?) echo "Invalid option -$OPTARG" && exit 1
       ;;
@@ -112,6 +115,7 @@ case $1 in
     echo "Running the check..."
 
     PROFS=`cat $WORDS_FILE`
+
     # For single file
     if [[ ! -z $FILE ]] && [[ -f $FILE ]]; then
       echo -e "\nChecking $FILE for profanity:"
@@ -127,6 +131,7 @@ case $1 in
 
       echo -e "\nFound profanity in $file:"
       cat $file | grep -Ewin --color=always "($PROFS)"
+      [ $STRICT ] && exit 1
     done
 
     echo "Check Completed."
