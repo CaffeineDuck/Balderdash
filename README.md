@@ -87,7 +87,7 @@ Usage: balderdash [command] [options]
 Commands:
   init|i: Initialize the config file
   help|h: Display this help message
-  check|c <-f|-c|-w|-s|-d>: Check a file/dir for profanity
+  check|c <-f|-c|-w|-d>: Check a file/dir for profanity
   download|dw <-c>: Download the profanity list according to language selection
 
 Options:
@@ -95,7 +95,6 @@ Options:
   -c [FILE]: Specify a config file
   -d [DIR]: Specify a directory to check
   -w [FILE]: Specify a file containing profanity words list
-  -s: Strict mode. Exit with error code 1 if profanity is found
 ```
 
 ## Configuration
