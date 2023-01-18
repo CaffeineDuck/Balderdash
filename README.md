@@ -8,6 +8,16 @@ It's a simple shell script and can run on almost any Unix system. It was created
 shell due to how simple it was to write it. I have no plans of moving it to other
 languages and adding more graphic features.
 
+## Features
+
+- Extremely fast search using `ag`.
+- Multi language support.
+- Custom white-list/ black-list support.
+- Files in .gitignore and .ignore are automatically ignored.
+- Very modular CLI.
+- Pre commit hook support.
+- [TODO] Github actions support.
+
 ## Installation
 
 You'll need to have [ag](https://github.com/ggreer/the_silver_searcher) installed
@@ -27,7 +37,7 @@ balderdash init
 
 ## Using pre-commit hook
 
-Add to your hooks.
+- Add to your hooks.
 
 ```yaml
 repos:
@@ -36,6 +46,8 @@ repos:
     hooks:
       - id: balderdash
 ```
+
+- Install the `balderdash` CLI and run the `balderdash init` command.
 
 ## CLI Usage Examples
 
@@ -85,3 +97,27 @@ Options:
   -w [FILE]: Specify a file containing profanity words list
   -s: Strict mode. Exit with error code 1 if profanity is found
 ```
+
+## Configuration
+
+You can configure how the CLI and works through the config file
+in your `~/.config/balderdash/balderdash.conf` file. It can be
+used to customize blacklisted words, white-listed words.
+
+- Add new language to the checker (`balderdash.conf`):
+
+```bash
+LANGUAGES=(en np fr au)
+```
+
+_You can check the list of supported languages in the [words](https://github.com/CaffeineDuck/Balderdash/tree/main/words)
+directory. You can create a PR and add your own language or words to a specific language there_
+
+- Add custom white-listed/ black-listed words (`balderdash.conf`):
+
+```bash
+DEFAULT_WHITELIST=(gosh shit)
+DEFAULT_BLACKLIST=(sudo pipenv)
+```
+
+_If it's a multi word black-list/ white-list wrap it in double quotes_
