@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function PARSE_OPTS() {
-  while getopts "f::w::d::c::s" opt; do
+  while getopts "f::w::d::c::" opt; do
     case $opt in
       f)
         FILE=$OPTARG
@@ -14,9 +14,6 @@ function PARSE_OPTS() {
       ;;
       d)
         DIR=$OPTARG
-        ;;
-      s)
-        STRICT=true
         ;;
       \?) echo "Invalid option -$OPTARG" && exit 1
       ;;
@@ -131,15 +128,26 @@ case $1 in
     # For single file
     if [[ ! -z $FILE ]] && [[ -f $FILE ]]; then
       ag -fw "($PROFS)" $FILE
-      if $STRICT; then exit 1; else exit 0; fi
+      echo "Done checking $FILE"
+      if [[ $? -eq 0 ]]; then
+        echo "Found profanity in $FILE"
+        exit 1
+      else
+        echo "No profanity found in $FILE"
+        exit 0
+      fi
     fi
 
     # For a dir
     ag -fw "($PROFS)" $DIR
-    echo "Check Completed."
 
-    # Strict mode check
-    if $STRICT; then exit 1; else exit 0; fi
+    if [[ $? -eq 0 ]]; then
+      echo "Found profanity in $DIR"
+      exit 1
+    else
+      echo "No profanity found in $DIR"
+      exit 0
+    fi
     ;;
 
   *|help|h)
@@ -155,7 +163,6 @@ case $1 in
     echo "  -c [FILE]: Specify a config file"
     echo "  -d [DIR]: Specify a directory to check"
     echo "  -w [FILE]: Specify a file containing profanity words list"
-    echo "  -s: Strict mode. Exit with error code 1 if profanity is found"
     ;;
 
 esac
