@@ -146,10 +146,11 @@ case $1 in
     echo "  check|c: Check a file/dir for profanity"
     echo "  download|dw: Download the profanity list according to language selection"
     echo "Options:"
-    echo "  -f: Specify a file to check"
-    echo "  -c: Specify a config file"
-    echo "  -d: Specify a directory to check"
-    echo "  -w: Specify a file containing profanity words list"
+    echo "  -f [FILE]: Specify a file to check"
+    echo "  -c [FILE]: Specify a config file"
+    echo "  -d [DIR]: Specify a directory to check"
+    echo "  -w [FILE]: Specify a file containing profanity words list"
+    echo "  -s: Strict mode. Exit with error code 1 if profanity is found"
     ;;
 
 esac
