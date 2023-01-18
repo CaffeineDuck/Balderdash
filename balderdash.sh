@@ -83,7 +83,6 @@ function DOWNLOAD_FILE() {
 
   # Remove custom whitelisted words
   for word in ${CUSTOM_WHITELIST[@]}; do
-    echo $word
     sed -i "/$word/d" $FILE
   done
   echo Removed custom whitelisted words from $FILE
