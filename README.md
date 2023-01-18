@@ -26,7 +26,7 @@ in your system. `ag` is very fast code searcher.
 The following script adds balderdash script to your `/bin`.
 
 ```bash
-curl -L https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/install.sh | bash
+curl -Ls https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/install.sh | bash
 ```
 
 You'll need to run init after installing the script.
