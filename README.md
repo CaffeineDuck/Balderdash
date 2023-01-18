@@ -10,7 +10,10 @@ languages and adding more graphic features.
 
 ## Installation
 
-This script adds balderdash script to your `/bin`.
+You'll need to have [ag](https://github.com/ggreer/the_silver_searcher) installed
+in your system. `ag` is very fast code searcher.
+
+The following script adds balderdash script to your `/bin`.
 
 ```bash
 curl -L https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/install.sh | bash

@@ -118,14 +118,11 @@ case $1 in
 
     # For single file
     if [[ ! -z $FILE ]] && [[ -f $FILE ]]; then
-      echo -e "\nChecking $FILE for profanity:"
-      grep -Ewin --color=always "($PROFS)" $FILE
-      echo "Check Completed."
-      exit 1
+      ag -fw "($PROFS)" $FILE
     fi
 
     # For a dir
-    grep -EIHwinr --color=always "($PROFS)" $DIR
+    ag -fw "($PROFS)" $DIR
     echo "Check Completed."
     ;;
 
