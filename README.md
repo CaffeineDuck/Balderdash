@@ -13,7 +13,7 @@ languages and adding more graphic features.
 This script adds balderdash script to your `/bin`.
 
 ```bash
-curl -L https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/balderdash.sh | bash
+curl -L https://raw.githubusercontent.com/CaffeineDuck/Balderdash/main/install.sh | bash
 ```
 
 You'll need to run init after installing the script.
