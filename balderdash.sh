@@ -125,15 +125,7 @@ case $1 in
     fi
 
     # For a dir
-    for file in $(find $DIR -follow); do
-      [ -d $file ] && continue
-      grep -Eqw "($PROFS)" $file || continue
-
-      echo -e "\nFound profanity in $file:"
-      cat $file | grep -Ewin --color=always "($PROFS)"
-      [ $STRICT ] && exit 1
-    done
-
+    grep -EIHwinr --color=always "($PROFS)" $DIR
     echo "Check Completed."
     ;;
 
